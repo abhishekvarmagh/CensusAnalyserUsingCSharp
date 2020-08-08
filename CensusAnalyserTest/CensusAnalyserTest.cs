@@ -10,6 +10,7 @@ namespace CensusAnalyserTest
         private string incorrectFileType = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\people.txt";
         private string csvFilePathWithInvalidDelimeter = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithInvalidDelimeter.csv";
         private string csvFilePathWithIncorrectHeader = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithIncorrectHeader.csv";
+        private string csvStateCodeFilePath = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCode.csv";
         CensusAnalyser censusAnalyser;
 
         [SetUp]
@@ -76,5 +77,13 @@ namespace CensusAnalyserTest
                 Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, e.type);
             }
         }
+
+        [Test]
+        public void givenStateCensusCSVFile_WhenCorrectFile_ShouldReturnCorrectNoOfRecords()
+        {
+            string[] actual = censusAnalyser.loadStateCensusData(csvStateCodeFilePath);
+            Assert.AreEqual(37, actual.Length);
+        }
+
     }
 }

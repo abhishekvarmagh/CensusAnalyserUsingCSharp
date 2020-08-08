@@ -31,5 +31,12 @@ namespace CensusAnalyserProblem
             }
             return censusData.Skip(1).ToArray();
         }
+
+        public string[] loadStateCensusData(string csvFilePath)
+        {
+            censusData = File.ReadAllLines(csvFilePath);
+            return censusData.Skip(1).ToArray();
+        }
+
     }
 }

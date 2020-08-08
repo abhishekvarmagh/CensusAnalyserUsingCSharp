@@ -11,6 +11,7 @@ namespace CensusAnalyserTest
         private string csvFilePathWithInvalidDelimeter = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithInvalidDelimeter.csv";
         private string csvFilePathWithIncorrectHeader = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithIncorrectHeader.csv";
         private string csvStateCodeFilePath = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCode.csv";
+        private string csvStateCodeFilePathWithInvalidDelimeter = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCodeWithInvalidDelimeter.csv";
         CensusAnalyser censusAnalyser;
 
         [SetUp]
@@ -27,7 +28,7 @@ namespace CensusAnalyserTest
         }
 
         [Test]
-        public void givenIndiaCensusData_WithWrongFile_ShouldThrowException()
+        public void givenIndiaCensusData_WhenWrongFile_ShouldThrowException()
         {
             try
             {
@@ -40,7 +41,7 @@ namespace CensusAnalyserTest
         }
 
         [Test]
-        public void givenIndiaCensusData_WithIncorrectFileType_ShouldThrowException()
+        public void givenIndiaCensusData_WhenIncorrectFileType_ShouldThrowException()
         {
             try
             {
@@ -81,8 +82,60 @@ namespace CensusAnalyserTest
         [Test]
         public void givenStateCensusCSVFile_WhenCorrectFile_ShouldReturnCorrectNoOfRecords()
         {
-            string[] actual = censusAnalyser.loadStateCensusData(csvStateCodeFilePath);
-            Assert.AreEqual(37, actual.Length);
+            string[] noOfEntries = censusAnalyser.loadStateCensusData(csvStateCodeFilePath);
+            Assert.AreEqual(37, noOfEntries.Length);
+        }
+
+        [Test]
+        public void givenStateCodesCSVFile_WhenFileNotFound_ShouldThrowException()
+        {
+            try
+            {
+                censusAnalyser.loadStateCensusData(invalidCSVFilePath);
+            }
+            catch (CensusAnalyserException ex)
+            {
+                Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, ex.type);
+            }
+        }
+
+        [Test]
+        public void givenStateCodesCSVFile_WhenIncorrectFileType_ShouldThrowException()
+        {
+            try
+            {
+                censusAnalyser.loadStateCensusData(incorrectFileType);
+            }
+            catch (CensusAnalyserException e)
+            {
+                Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE, e.type);
+            }
+        }
+
+        [Test]
+        public void givenStateCodesCSVFile_WhenIncorrectDelimeterInFile_ShouldThrowException()
+        {
+            try
+            {
+                censusAnalyser.loadStateCensusData(csvStateCodeFilePathWithInvalidDelimeter);
+            }
+            catch (CensusAnalyserException e)
+            {
+                Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER, e.type);
+            }
+        }
+
+        [Test]
+        public void givenStateCodesCSVFile_WhenIncorrectHeadersInFile_ShouldThrowException()
+        {
+            try
+            {
+                censusAnalyser.loadStateCensusData(csvFilePathWithIncorrectHeader);
+            }
+            catch (CensusAnalyserException e)
+            {
+                Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, e.type);
+            }
         }
 
     }

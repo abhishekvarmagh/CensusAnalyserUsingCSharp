@@ -9,6 +9,7 @@ namespace CensusAnalyserTest
         private string invalidCSVFilePath = @"C:\Users\abhishek verma\source\CensusAnalyserTest\CsvFile\IndiaStateCensusData.csv";
         private string incorrectFileType = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\people.txt";
         private string csvFilePathWithInvalidDelimeter = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithInvalidDelimeter.csv";
+        private string csvFilePathWithIncorrectHeader = @"C:\Users\abhishek verma\source\repos\CensusAnalyserTest\CsvFile\IndiaStateCensusDataWithIncorrectHeader.csv";
         CensusAnalyser censusAnalyser;
 
         [SetUp]
@@ -60,6 +61,19 @@ namespace CensusAnalyserTest
             catch (CensusAnalyserException e)
             {
                 Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER, e.type);
+            }
+        }
+
+        [Test]
+        public void givenIndianCensusCSVFile_WhenIncorrectHeadersInFile_ShouldThrowException()
+        {
+            try
+            {
+                censusAnalyser.loadIndiaCensusData(csvFilePathWithIncorrectHeader);
+            }
+            catch (CensusAnalyserException e)
+            {
+                Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, e.type);
             }
         }
     }

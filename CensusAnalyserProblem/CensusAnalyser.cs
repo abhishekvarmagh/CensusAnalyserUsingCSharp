@@ -15,9 +15,16 @@ namespace CensusAnalyserProblem
             }
             if (Path.GetExtension(csvFilePath) != ".csv")
             {
-                throw new CensusAnalyserException("Incorrect Type", CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE);
+                throw new CensusAnalyserException("Incorrect File Type", CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE);
             }
             censusData = File.ReadAllLines(csvFilePath);
+            foreach (string records in censusData)
+            {
+                if (!records.Contains(","))
+                {
+                    throw new CensusAnalyserException("File Contain Invalid Delimiters", CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER);
+                }
+            }
             return censusData.Skip(1).ToArray();
         }
     }

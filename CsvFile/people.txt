@@ -1,0 +1,1 @@
+In preceding code, we use the ReadAllLines method of the File object to read all content of our csv file. ( the path of the csv file is passed as a parameter of the method). The ReadAllLines method returns a string array containing all lines of the file. Since the information contained in each lin

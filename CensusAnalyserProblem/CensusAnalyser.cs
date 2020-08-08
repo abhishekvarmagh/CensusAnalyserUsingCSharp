@@ -7,7 +7,7 @@ namespace CensusAnalyserProblem
     public class CensusAnalyser
     {
         string[] censusData;
-        public string[] loadIndiaCensusData(string csvFilePath)
+        public string[] loadIndiaCensusData(string csvFilePath, string header)
         {
             if (!File.Exists(csvFilePath))
             {
@@ -18,32 +18,7 @@ namespace CensusAnalyserProblem
                 throw new CensusAnalyserException("Incorrect File Type", CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE);
             }
             censusData = File.ReadAllLines(csvFilePath);
-            if (censusData[0] != "State,Population,AreaInSqKm,DensityPerSqKm")
-            {
-                throw new CensusAnalyserException("Invalid Headers", CensusAnalyserException.ExceptionType.INVALID_HEADERS);
-            }
-            foreach (string records in censusData)
-            {
-                if (!records.Contains(","))
-                {
-                    throw new CensusAnalyserException("File Contain Invalid Delimiters", CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER);
-                }
-            }
-            return censusData.Skip(1).ToArray();
-        }
-
-        public string[] loadStateCensusData(string csvFilePath)
-        {
-            if (!File.Exists(csvFilePath))
-            {
-                throw new CensusAnalyserException("File Not Found", CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
-            }
-            if (Path.GetExtension(csvFilePath) != ".csv")
-            {
-                throw new CensusAnalyserException("Incorrect File Type", CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE);
-            }
-            censusData = File.ReadAllLines(csvFilePath);
-            if (censusData[0] != "SrNo,State Name,TIN,StateCode")
+            if (censusData[0] != header)
             {
                 throw new CensusAnalyserException("Invalid Headers", CensusAnalyserException.ExceptionType.INVALID_HEADERS);
             }

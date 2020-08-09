@@ -1,6 +1,7 @@
 using CensusAnalyserProblem;
 using NUnit.Framework;
 using static CensusAnalyserProblem.CensusAnalyser;
+using System.Collections.Generic;
 
 namespace CensusAnalyserTest
 {
@@ -17,11 +18,13 @@ namespace CensusAnalyserTest
         private string stateCodeFileHeader = "SrNo,State Name,TIN,StateCode";
         CSVFactory csvFactory;
         CSVData csvData;
+        List<string> numberOfEntries;
 
         [SetUp]
         public void Setup()
         {
             csvFactory = new CSVFactory();
+            numberOfEntries = new List<string>();
         }
 
         [Test]
@@ -29,8 +32,8 @@ namespace CensusAnalyserTest
         {
             CensusAnalyser censusAnalyser = (CensusAnalyser)csvFactory.getCensusAnalyser();
             csvData = new CSVData(censusAnalyser.loadIndiaCensusData);
-            string[] numberOfEntries = (string[])censusAnalyser.loadIndiaCensusData(csvFilePath, stateCensusFileHeader);
-            Assert.AreEqual(29, numberOfEntries.Length);
+            numberOfEntries = (List<string>)censusAnalyser.loadIndiaCensusData(csvFilePath, stateCensusFileHeader);
+            Assert.AreEqual(29, numberOfEntries.Count);
         }
 
         [Test]
@@ -74,8 +77,8 @@ namespace CensusAnalyserTest
         {
             CensusAnalyser censusAnalyser = (CensusAnalyser)csvFactory.getCensusAnalyser();
             csvData = new CSVData(censusAnalyser.loadIndiaCensusData);
-            string[] noOfEntries = (string[])censusAnalyser.loadIndiaCensusData(csvStateCodeFilePath, stateCodeFileHeader);
-            Assert.AreEqual(37, noOfEntries.Length);
+            numberOfEntries = (List<string>)censusAnalyser.loadIndiaCensusData(csvStateCodeFilePath, stateCodeFileHeader);
+            Assert.AreEqual(37, numberOfEntries.Count);
         }
 
         [Test]

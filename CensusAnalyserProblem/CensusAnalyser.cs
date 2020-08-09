@@ -6,8 +6,17 @@ namespace CensusAnalyserProblem
 {
     public class CensusAnalyser
     {
+        public delegate object CSVData();
         string[] censusData;
-        public string[] loadIndiaCensusData(string csvFilePath, string header)
+        string csvFilePath;
+        string header;
+
+        public CensusAnalyser(string csvFilePath, string header)
+        {
+            this.csvFilePath = csvFilePath;
+            this.header = header;
+        }
+        public object loadIndiaCensusData()
         {
             if (!File.Exists(csvFilePath))
             {

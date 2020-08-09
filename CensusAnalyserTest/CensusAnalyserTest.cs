@@ -2,6 +2,7 @@ using CensusAnalyserProblem;
 using NUnit.Framework;
 using static CensusAnalyserProblem.CensusAnalyser;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CensusAnalyserTest
 {
@@ -115,6 +116,15 @@ namespace CensusAnalyserTest
             csvData = new CSVData(censusAnalyser.loadIndiaCensusData);
             var exception = Assert.Throws<CensusAnalyserException>(() => csvData(csvFilePathWithIncorrectHeader, stateCodeFileHeader));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, exception.type);
+        }
+
+        [Test]
+        public void GivenIndianCensusCSVFile_WhenProper_ShouldReturnSortedDataInJSONFormat()
+        {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvFilePath).ToString();
+            string[] sortedCensusData = JsonConvert.DeserializeObject<string[]>(sortedData);
+            Assert.AreEqual("Andhra Pradesh,49386799,162968,303", sortedCensusData[0]);
         }
 
     }

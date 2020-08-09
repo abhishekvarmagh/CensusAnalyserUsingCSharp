@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,19 @@ namespace CensusAnalyserProblem
                 }
             }
             return censusData.Skip(1).ToList();
+        }
+
+        public object getStateWiseSortedCensusData(string csvFilePath)
+        {
+            string[] allRecords = File.ReadAllLines(csvFilePath);
+            var recordsWithoutHeader = allRecords.Skip(1);
+            var sorted =
+                from singleRecord in recordsWithoutHeader
+                let column = singleRecord.Split(',')
+                orderby column[0]
+                select singleRecord;
+            List<string> sortedData = sorted.ToList<string>();
+            return JsonConvert.SerializeObject(sortedData);
         }
 
     }

@@ -36,15 +36,15 @@ namespace CensusAnalyserProblem
             return censusData.Skip(1).ToList();
         }
 
-        public object getStateWiseSortedCensusData(string csvFilePath)
+        public object getStateWiseSortedCensusData(string csvFilePath, int index)
         {
-            string[] allRecords = File.ReadAllLines(csvFilePath);
-            var recordsWithoutHeader = allRecords.Skip(1);
+            string[] records = File.ReadAllLines(csvFilePath);
+            var dataWithoutHeader = records.Skip(1);
             var sorted =
-                from singleRecord in recordsWithoutHeader
-                let column = singleRecord.Split(',')
-                orderby column[0]
-                select singleRecord;
+                from data in dataWithoutHeader
+                let column = data.Split(',')
+                orderby column[index]
+                select data;
             List<string> sortedData = sorted.ToList<string>();
             return JsonConvert.SerializeObject(sortedData);
         }

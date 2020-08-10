@@ -119,13 +119,21 @@ namespace CensusAnalyserTest
         }
 
         [Test]
-        public void GivenIndianCensusCSVFile_WhenProper_ShouldReturnSortedDataInJSONFormat()
+        public void givenIndianStateCensusData_WhenSortedOnState_ShouldReturnSortedResult()
         {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvFilePath).ToString();
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvFilePath, 0).ToString();
             string[] sortedCensusData = JsonConvert.DeserializeObject<string[]>(sortedData);
             Assert.AreEqual("Andhra Pradesh,49386799,162968,303", sortedCensusData[0]);
         }
 
+        [Test]
+        public void givenIndianStateCSVFile_WhenProper_ShouldReturnSortedDataAccordingToStateCodeInJSONFormats()
+        {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvStateCodeFilePath, 3).ToString();
+            string[] sortedStateCensusData = JsonConvert.DeserializeObject<string[]>(sortedData);
+            Assert.AreEqual("3,Andhra Pradesh New,37,AD", sortedStateCensusData[0]);
+        }
     }
 }

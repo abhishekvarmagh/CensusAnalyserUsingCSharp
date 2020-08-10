@@ -20,12 +20,14 @@ namespace CensusAnalyserTest
         CSVFactory csvFactory;
         CSVData csvData;
         Dictionary<int, string> numberOfEntries;
+        Dictionary<int, string> numberOfStateCodeEntries;
 
         [SetUp]
         public void Setup()
         {
             csvFactory = new CSVFactory();
             numberOfEntries = new Dictionary<int, string>();
+            numberOfStateCodeEntries = new Dictionary<int, string>();
         }
 
         [Test]
@@ -34,7 +36,9 @@ namespace CensusAnalyserTest
             CensusAnalyser censusAnalyser = (CensusAnalyser)csvFactory.getCensusAnalyser();
             csvData = new CSVData(censusAnalyser.loadIndiaCensusData);
             numberOfEntries = (Dictionary<int, string>)censusAnalyser.loadIndiaCensusData(csvFilePath, stateCensusFileHeader);
+            numberOfStateCodeEntries = (Dictionary<int, string>)censusAnalyser.loadIndiaCensusData(csvStateCodeFilePath, stateCodeFileHeader);
             Assert.AreEqual(29, numberOfEntries.Count);
+            Assert.AreEqual(37, numberOfStateCodeEntries.Count);
         }
 
         [Test]

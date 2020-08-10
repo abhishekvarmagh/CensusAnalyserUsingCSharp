@@ -9,7 +9,9 @@ namespace CensusAnalyserProblem
     public class CensusAnalyser : ICSVBuilder
     {
         public delegate object CSVData(string csvFilePath, string header);
-        List<string> censusData;
+        string[] censusData;
+        int key = 0;
+        Dictionary<int, string> censusDataMap = new Dictionary<int, string>();
 
         public object loadIndiaCensusData(string csvFilePath, string header)
         {
@@ -21,31 +23,34 @@ namespace CensusAnalyserProblem
             {
                 throw new CensusAnalyserException("Incorrect File Type", CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE);
             }
-            censusData = File.ReadAllLines(csvFilePath).ToList();
+            censusData = File.ReadAllLines(csvFilePath);
             if (censusData[0] != header)
             {
                 throw new CensusAnalyserException("Invalid Headers", CensusAnalyserException.ExceptionType.INVALID_HEADERS);
             }
             foreach (string records in censusData)
             {
+                key++;
+                censusDataMap.Add(key, records);
                 if (!records.Contains(","))
                 {
                     throw new CensusAnalyserException("File Contain Invalid Delimiters", CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER);
                 }
             }
-            return censusData.Skip(1).ToList();
+            return censusDataMap.Skip(1).ToDictionary(p => p.Key, p => p.Value);
         }
 
-        public object getStateWiseSortedCensusData(string csvFilePath, int index)
+        public object getStateWiseSortedCensusData(string csvFilePath, string header, int index)
         {
-            string[] records = File.ReadAllLines(csvFilePath);
-            var dataWithoutHeader = records.Skip(1);
+            Dictionary<int, string> censusData = (Dictionary<int, string>)loadIndiaCensusData(csvFilePath, header);
+            string[] records = censusData.Values.ToArray();
+            var dataWithoutHeader = records;
             var sorted =
                 from data in dataWithoutHeader
                 let column = data.Split(',')
                 orderby column[index]
                 select data;
-            List<string> sortedData = sorted.ToList<string>();
+            List<string> sortedData = sorted.ToList();
             return JsonConvert.SerializeObject(sortedData);
         }
 

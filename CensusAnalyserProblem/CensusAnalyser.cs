@@ -9,7 +9,6 @@ namespace CensusAnalyserProblem
 {
     public class CensusAnalyser : ICSVBuilder
     {
-        public delegate object CSVData(string csvFilePath, string header);
         string[] censusData;
         Dictionary<string, CensusDataDAO> daoMap = new Dictionary<string, CensusDataDAO>();
 
@@ -46,17 +45,17 @@ namespace CensusAnalyserProblem
         public string getStateWiseSortedCensusData(string csvFilePath, string header, string sortByField)
         {
             var censusData = (Dictionary<string, CensusDataDAO>)loadIndiaCensusData(csvFilePath, header);
-            //CensusDataDAO[] records = censusData.Values.ToArray();
             List<CensusDataDAO> data = censusData.Values.ToList(); 
-            return JsonConvert.SerializeObject(getField(sortByField, data));
+            return JsonConvert.SerializeObject(getFieldInSortedOrder(sortByField, data));
         }
 
-        public List<CensusDataDAO> getField(string sortfield, List<CensusDataDAO> data)
+        public List<CensusDataDAO> getFieldInSortedOrder(string sortfield, List<CensusDataDAO> data)
         {
             switch (sortfield)
             {
                 case "stateName": return data.OrderBy(x => x.state).ToList();
                 case "stateCode": return data.OrderBy(x => x.stateCode).ToList();
+                case "population": return data.OrderByDescending(c => c.population).ToList();
                 default: return data;
             }
         }

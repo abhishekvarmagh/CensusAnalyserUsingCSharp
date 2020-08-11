@@ -121,5 +121,21 @@ namespace CensusAnalyserTest
             CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
             Assert.AreEqual(199812341, sortedStateCensusData[0].population);
         }
+
+        [Test]
+        public void givenIndianCensusData_WhenSortedOnPopulationDensity_ShouldReturnSortedResult()
+        {
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvFilePath, stateCensusFileHeader, "density");
+            CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
+            Assert.AreEqual(1102, sortedStateCensusData[0].density);
+        }
+
+        [Test]
+        public void givenIndianCensusData_WhenSortedOnTotalArea_ShouldReturnSortedResult()
+        {
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(csvFilePath, stateCensusFileHeader, "areaInSqKm");
+            CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
+            Assert.AreEqual(342239, sortedStateCensusData[0].area);
+        }
     }
 }

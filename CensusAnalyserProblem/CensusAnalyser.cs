@@ -10,7 +10,7 @@ namespace CensusAnalyserProblem
     public class CensusAnalyser : ICSVBuilder
     {
         string[] censusData;
-        Dictionary<string, CensusDataDAO> daoMap = new Dictionary<string, CensusDataDAO>();
+        Dictionary<string, CensusDataDAO> censusDataMap = new Dictionary<string, CensusDataDAO>();
 
         public object loadIndiaCensusData(string csvFilePath, string header)
         {
@@ -35,11 +35,11 @@ namespace CensusAnalyserProblem
                 }
                 string[] column = records.Split(",");
                 if (csvFilePath.Contains("IndiaStateCode.csv"))
-                    daoMap.Add(column[1], new CensusDataDAO(Convert.ToInt32(column[0]), column[1], Convert.ToInt32(column[2]), column[3]));
+                    censusDataMap.Add(column[1], new CensusDataDAO(Convert.ToInt32(column[0]), column[1], Convert.ToInt32(column[2]), column[3]));
                 if (csvFilePath.Contains("IndiaStateCensusData.csv"))
-                    daoMap.Add(column[0], new CensusDataDAO(column[0], column[1], column[2], column[3]));
+                    censusDataMap.Add(column[0], new CensusDataDAO(column[0], column[1], column[2], column[3]));
             }
-            return daoMap;
+            return censusDataMap;
         }
 
         public string getStateWiseSortedCensusData(string csvFilePath, string header, string sortByField)
@@ -56,6 +56,8 @@ namespace CensusAnalyserProblem
                 case "stateName": return data.OrderBy(x => x.state).ToList();
                 case "stateCode": return data.OrderBy(x => x.stateCode).ToList();
                 case "population": return data.OrderByDescending(c => c.population).ToList();
+                case "density": return data.OrderByDescending(c => c.density).ToList();
+                case "areaInSqKm": return data.OrderByDescending(c => c.area).ToList();
                 default: return data;
             }
         }

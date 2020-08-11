@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CensusAnalyserProblem.DAO;
 
 namespace CensusAnalyserProblem
 {
@@ -10,12 +11,10 @@ namespace CensusAnalyserProblem
     {
         public delegate object CSVData(string csvFilePath, string header);
         string[] censusData;
-        int key = 0;
-        Dictionary<int, string> censusDataMap;
+        Dictionary<string, CensusDataDAO> daoMap = new Dictionary<string, CensusDataDAO>();
 
         public object loadIndiaCensusData(string csvFilePath, string header)
         {
-            censusDataMap = new Dictionary<int, string>();
             if (!File.Exists(csvFilePath))
             {
                 throw new CensusAnalyserException("File Not Found", CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
@@ -29,30 +28,37 @@ namespace CensusAnalyserProblem
             {
                 throw new CensusAnalyserException("Invalid Headers", CensusAnalyserException.ExceptionType.INVALID_HEADERS);
             }
-            foreach (string records in censusData)
+            foreach (string records in censusData.Skip(1))
             {
-                key++;
-                censusDataMap.Add(key, records);
                 if (!records.Contains(","))
                 {
                     throw new CensusAnalyserException("File Contain Invalid Delimiters", CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER);
                 }
+                string[] column = records.Split(",");
+                if (csvFilePath.Contains("IndiaStateCode.csv"))
+                    daoMap.Add(column[1], new CensusDataDAO(Convert.ToInt32(column[0]), column[1], Convert.ToInt32(column[2]), column[3]));
+                if (csvFilePath.Contains("IndiaStateCensusData.csv"))
+                    daoMap.Add(column[0], new CensusDataDAO(column[0], column[1], column[2], column[3]));
             }
-            return censusDataMap.Skip(1).ToDictionary(p => p.Key, p => p.Value);
+            return daoMap;
         }
 
-        public object getStateWiseSortedCensusData(string csvFilePath, string header, int index)
+        public string getStateWiseSortedCensusData(string csvFilePath, string header, string sortByField)
         {
-            Dictionary<int, string> censusData = (Dictionary<int, string>)loadIndiaCensusData(csvFilePath, header);
-            string[] records = censusData.Values.ToArray();
-            var dataWithoutHeader = records;
-            var sorted =
-                from data in dataWithoutHeader
-                let column = data.Split(',')
-                orderby column[index]
-                select data;
-            List<string> sortedData = sorted.ToList();
-            return JsonConvert.SerializeObject(sortedData);
+            var censusData = (Dictionary<string, CensusDataDAO>)loadIndiaCensusData(csvFilePath, header);
+            //CensusDataDAO[] records = censusData.Values.ToArray();
+            List<CensusDataDAO> data = censusData.Values.ToList(); 
+            return JsonConvert.SerializeObject(getField(sortByField, data));
+        }
+
+        public List<CensusDataDAO> getField(string sortfield, List<CensusDataDAO> data)
+        {
+            switch (sortfield)
+            {
+                case "stateName": return data.OrderBy(x => x.state).ToList();
+                case "stateCode": return data.OrderBy(x => x.stateCode).ToList();
+                default: return data;
+            }
         }
 
     }

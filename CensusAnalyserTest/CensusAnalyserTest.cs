@@ -182,5 +182,35 @@ namespace CensusAnalyserTest
             Assert.AreEqual("California", sortedStateCensusData[0].state);
         }
 
+        [Test]
+        public void givenUSCensusData_WhenSortedOnPopulationDensity_ShouldReturnSortedResult()
+        {
+            Dictionary<string, CensusDataDAO> censusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(censusData, SortFeild.SortBy.POPULATION_DENSITY);
+            CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
+            Assert.AreEqual("District of Columbia", sortedStateCensusData[0].state);
+        }
+
+        [Test]
+        public void givenUSCensusData_WhenSortedOnTotalArea_ShouldReturnSortedResult()
+        {
+            Dictionary<string, CensusDataDAO> censusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(censusData, SortFeild.SortBy.TOTAL_AREA);
+            CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
+            Assert.AreEqual("Alaska", sortedStateCensusData[0].state);
+        }
+
+        [Test]
+        public void givenUSAndIndiaCensusData_WhenSortedOnPopulationDensity_ShouldReturnSortedResult()
+        {
+            Dictionary<string, CensusDataDAO> indianCensusData = censusAnalyser.loadCensusData(Country.INDIA, csvFilePath, csvStateCodeFilePath);
+            string indianSortedData = censusAnalyser.getStateWiseSortedCensusData(indianCensusData, SortFeild.SortBy.POPULATION_DENSITY);
+            CensusDataDAO[] sortedIndianStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(indianSortedData);
+            Dictionary<string, CensusDataDAO> usCensusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
+            string usSortedData = censusAnalyser.getStateWiseSortedCensusData(usCensusData, SortFeild.SortBy.POPULATION_DENSITY);
+            CensusDataDAO[] sortedUSStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(usSortedData);
+            Assert.AreEqual(false, sortedIndianStateCensusData[0].density.CompareTo(sortedUSStateCensusData[0].density)>2);
+        }
+
     }
 }

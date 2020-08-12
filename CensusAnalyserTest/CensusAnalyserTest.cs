@@ -65,12 +65,12 @@ namespace CensusAnalyserTest
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, exception.type);
         }
 
-        //[Test]
-        //public void givenStateCodeData_WhenCorrectFile_ShouldReturnCorrectNoOfRecords()
-        //{
-        //    numberOfEntries = censusAnalyser.loadCensusData(Country.INDIA, csvStateCodeFilePath, stateCodeFileHeader);
-        //    Assert.AreEqual(37, numberOfEntries.Count);
-        //}
+        [Test]
+        public void givenStateCodeData_WhenCorrectFile_ShouldReturnCorrectNoOfRecords()
+        {
+            numberOfEntries = censusAnalyser.loadCensusData(Country.INDIA, csvStateCodeFilePath, stateCodeFileHeader);
+            Assert.AreEqual(37, numberOfEntries.Count);
+        }
 
         [Test]
         public void givenStateCodeData_WhenFileNotFound_ShouldThrowException()
@@ -171,6 +171,15 @@ namespace CensusAnalyserTest
         {
             var exception = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCensusData(Country.US, csvFilePathWithIncorrectHeader));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_HEADERS, exception.type);
+        }
+
+        [Test]
+        public void givenUSCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult()
+        {
+            Dictionary<string, CensusDataDAO> censusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
+            string sortedData = censusAnalyser.getStateWiseSortedCensusData(censusData, SortFeild.SortBy.POPULATION);
+            CensusDataDAO[] sortedStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(sortedData);
+            Assert.AreEqual("California", sortedStateCensusData[0].state);
         }
 
     }

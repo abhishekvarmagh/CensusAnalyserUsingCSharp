@@ -11,8 +11,6 @@ namespace CensusAnalyserProblem.DAO
         public long population;
         public long area;
         public long density;
-        public int serialNo;
-        public int tin;
         public string stateCode;
 
         public CensusDataDAO() { }
@@ -23,14 +21,6 @@ namespace CensusAnalyserProblem.DAO
             this.population = indianCensus.population;
             this.area = indianCensus.area;
             this.density = indianCensus.density;
-        }
-
-        public CensusDataDAO(IndianStateCode indianStateCode)
-        {
-            this.serialNo = indianStateCode.serialNo;
-            this.state = indianStateCode.state;
-            this.tin = indianStateCode.tin;
-            this.stateCode = indianStateCode.stateCode;
         }
 
         public CensusDataDAO(USCensus usCensus)

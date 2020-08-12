@@ -7,6 +7,6 @@ namespace CensusAnalyserProblem
 {
     public interface ICSVBuilder
     {
-        Dictionary<string, CensusDataDAO> loadIndiaCensusData(string csvFilePath, string header);
+        string[] LoadCensusData(string csvFilePath, string header);
     }
 }

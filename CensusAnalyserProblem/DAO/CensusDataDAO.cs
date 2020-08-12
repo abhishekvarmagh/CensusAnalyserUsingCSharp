@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CensusAnalyserProblem.POCO;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,20 +17,28 @@ namespace CensusAnalyserProblem.DAO
 
         public CensusDataDAO() { }
 
-        public CensusDataDAO(string state, string population, string area, string density)
+        public CensusDataDAO(IndianCensus indianCensus)
         {
-            this.state = state;
-            this.population = Convert.ToUInt32(population);
-            this.area = Convert.ToUInt32(area);
-            this.density = Convert.ToUInt32(density);
+            this.state = indianCensus.state;
+            this.population = indianCensus.population;
+            this.area = indianCensus.area;
+            this.density = indianCensus.density;
         }
 
-        public CensusDataDAO(int serialNo, string stateName, int tin, string stateCode)
+        public CensusDataDAO(IndianStateCode indianStateCode)
         {
-            this.serialNo = serialNo;
-            this.state = stateName;
-            this.tin = tin;
-            this.stateCode = stateCode;
+            this.serialNo = indianStateCode.serialNo;
+            this.state = indianStateCode.state;
+            this.tin = indianStateCode.tin;
+            this.stateCode = indianStateCode.stateCode;
+        }
+
+        public CensusDataDAO(USCensus usCensus)
+        {
+            this.state = usCensus.state;
+            this.population = usCensus.population;
+            this.area = (long)usCensus.totalArea;
+            this.density = (long)usCensus.density;
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using CensusAnalyserProblem.DAO;
 using static CensusAnalyserProblem.SortFeild;
-using CensusAnalyserProblem.POCO;
 
 namespace CensusAnalyserProblem
 {
@@ -16,9 +14,6 @@ namespace CensusAnalyserProblem
         {
             INDIA, US
         }
-
-        string[] censusData;
-        Dictionary<string, CensusDataDAO> censusDataMap = new Dictionary<string, CensusDataDAO>();
 
         public Dictionary<string, CensusDataDAO> loadCensusData(Country country, params string[] csvFilePath)
         {

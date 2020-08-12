@@ -66,13 +66,6 @@ namespace CensusAnalyserTest
         }
 
         [Test]
-        public void givenStateCodeData_WhenCorrectFile_ShouldReturnCorrectNoOfRecords()
-        {
-            numberOfEntries = censusAnalyser.loadCensusData(Country.INDIA, csvStateCodeFilePath, stateCodeFileHeader);
-            Assert.AreEqual(37, numberOfEntries.Count);
-        }
-
-        [Test]
         public void givenStateCodeData_WhenFileNotFound_ShouldThrowException()
         {
             var exception = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCensusData(Country.INDIA, invalidCSVFilePath));
@@ -84,13 +77,6 @@ namespace CensusAnalyserTest
         {
             var exception = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCensusData(Country.INDIA, incorrectFileType));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_TYPE, exception.type);
-        }
-
-        [Test]
-        public void givenStateCodeData_WhenIncorrectDelimeterInFile_ShouldThrowException()
-        {
-            var exception = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCensusData(Country.INDIA, csvStateCodeFilePathWithInvalidDelimeter));
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_CONTAIN_INVALID_DELIMITER, exception.type);
         }
 
         [Test]
@@ -209,7 +195,19 @@ namespace CensusAnalyserTest
             Dictionary<string, CensusDataDAO> usCensusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
             string usSortedData = censusAnalyser.getStateWiseSortedCensusData(usCensusData, SortFeild.SortBy.POPULATION_DENSITY);
             CensusDataDAO[] sortedUSStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(usSortedData);
-            Assert.AreEqual(false, sortedIndianStateCensusData[0].density.CompareTo(sortedUSStateCensusData[0].density)>2);
+            Assert.AreEqual(false, sortedIndianStateCensusData[0].density.CompareTo(sortedUSStateCensusData[0].density) > 2);
+        }
+
+        [Test]
+        public void givenUSAndIndiaCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult()
+        {
+            Dictionary<string, CensusDataDAO> indianCensusData = censusAnalyser.loadCensusData(Country.INDIA, csvFilePath, csvStateCodeFilePath);
+            string indianSortedData = censusAnalyser.getStateWiseSortedCensusData(indianCensusData, SortFeild.SortBy.POPULATION);
+            CensusDataDAO[] sortedIndianStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(indianSortedData);
+            Dictionary<string, CensusDataDAO> usCensusData = censusAnalyser.loadCensusData(Country.US, usCSVFilePath);
+            string usSortedData = censusAnalyser.getStateWiseSortedCensusData(usCensusData, SortFeild.SortBy.POPULATION);
+            CensusDataDAO[] sortedUSStateCensusData = JsonConvert.DeserializeObject<CensusDataDAO[]>(usSortedData);
+            Assert.AreEqual(false, sortedIndianStateCensusData[0].population.CompareTo(sortedUSStateCensusData[0].population) > 2);
         }
 
     }
